@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SampleGet</string>
+    <string name="brand">Brand Name</string>
+    <string name="price">Price</string>
+    <string name="rating">Rating</string>
+    <string name="desc">Description</string>
+    <string name="type">Product Type</string>
+    <string name="prodcut">Product Name</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_list__data">List_Data</string>
+    <string name="title_activity_recycler__view__adapter">Recycler_View_Adapter</string>
+    <string name="title_activity_recycle__list">Recycle_List</string>
+    <string name="title_activity_product__info">Product_Info</string>
+</resources>
