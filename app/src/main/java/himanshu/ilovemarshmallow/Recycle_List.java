@@ -46,7 +46,7 @@ public class Recycle_List extends Activity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar.setVisibility(View.VISIBLE);
 
-
+        //Allows to be run on main thread
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -76,7 +76,7 @@ public class Recycle_List extends Activity {
             HttpURLConnection urlConnection = null;
 
             Integer result = 0;
-            Log.d("Value of URL", params[0]);
+
             try{
                 URL url = new URL(params[0]);
                 urlConnection = (HttpURLConnection)url.openConnection();
@@ -90,13 +90,13 @@ public class Recycle_List extends Activity {
 
                 int statusCode = urlConnection.getResponseCode();
 
-                Log.d("Inside Try ASync loop",Integer.toString(statusCode));
+
 
                 if(statusCode == 200){
                     inputStream = new BufferedInputStream(urlConnection.getInputStream());
                     String response = convertInputStreamToString(inputStream);
                     parseResult(response);
-                    Log.d("Inside Status Code", "Connection OK");
+
                 }
 
 
@@ -111,9 +111,9 @@ public class Recycle_List extends Activity {
 
         @Override
         protected void onPostExecute(Integer result) {
-            /* Download complete. Lets update UI */
 
-            progressBar.setVisibility(View.GONE);
+
+                progressBar.setVisibility(View.GONE);
 
 
                 recycler_view_adapter = new Recycler_View_Adapter(Recycle_List.this, productName,productAsin,productPrice,productRating,imageURL);
@@ -131,7 +131,7 @@ public class Recycle_List extends Activity {
 
         String line = "";
         String result = "";
-        Log.d("Inside Convert Stream","Stream to String");
+
         try {
             while((line = bufferedReader.readLine()) != null){
                 result += line;
@@ -157,15 +157,14 @@ public class Recycle_List extends Activity {
 
             JSONArray posts = response.optJSONArray("results");
 
-            Log.d("Response : ", result);
-            Log.d("Length of results : ", Integer.toString(posts.length()));
+
 
             productName = new String[posts.length()];
             productAsin = new String[posts.length()];
             productPrice = new String[posts.length()];
             productRating = new String[posts.length()];
             imageURL = new String[posts.length()];
-            Log.d("Length of posts : ", Integer.toString(posts.length()));
+
             for(int i=0; i< posts.length();i++ ){
                 JSONObject post = posts.optJSONObject(i);
                 String title = post.optString("productName");
@@ -180,7 +179,7 @@ public class Recycle_List extends Activity {
                 productRating[i] = ratingProduct;
                 imageURL[i] = url;
             }
-            Log.d("Size of array", Integer.toString(productName.length));
+
         }catch (JSONException e){
             e.printStackTrace();
         }

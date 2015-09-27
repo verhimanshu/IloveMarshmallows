@@ -1,3 +1,16 @@
+/*
+
+Following class gets URL through Recycler View Adapter and generates view of product information.
+onCreate(Bundle savedInstanceState) - Calls AsyncTask to create connection and parse data
+
+getData - Gets data from url and shows it after parsing JSON
+    doInBackground - Creates connection to url and calls 2 functions 1.InputStream to String 2.Parse JSON
+    onPostExecute - Displays data on views.
+
+convertInputStreamToString - Converts input stream to string type
+
+parseResult - Parse JSON string
+*/
 package himanshu.ilovemarshmallow;
 
 import android.app.Activity;
@@ -5,7 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -50,7 +62,7 @@ public class Product_Info extends Activity {
             productImage = (ImageView)findViewById(R.id.product_image);
             productDesc = (TextView)findViewById(R.id.product_desc);
 
-
+            //Get data from intent
             Intent productInfo = getIntent();
             asinString = productInfo.getExtras().getString("ProductAsin");
             priceString = productInfo.getExtras().getString("Price");
@@ -58,7 +70,7 @@ public class Product_Info extends Activity {
 
             progressBar.setVisibility(View.VISIBLE);
 
-
+            //Add asin value of product to the url
             final String productURL = "https://zappos.amazon.com/mobileapi/v1/product/asin/" + asinString;
             new getData().execute(productURL);
 
@@ -70,33 +82,30 @@ public class Product_Info extends Activity {
 
     public class getData extends AsyncTask<String, Void, Integer> {
 
+
+        //Creates connection to url
+        //Gets data in Input Stream
+        //Call function to parse stream
         @Override
         protected Integer doInBackground(String... params) {
             InputStream inputStream = null;
             HttpURLConnection urlConnection = null;
 
             Integer result = 0;
-            Log.d("Value of URL", params[0]);
+
             try{
                 URL url = new URL(params[0]);
                 urlConnection = (HttpURLConnection)url.openConnection();
-
-
                 urlConnection.setRequestProperty("Content-Type", "application/json");
-
-
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestMethod("GET");
 
                 int statusCode = urlConnection.getResponseCode();
-
-                Log.d("Inside Try ASync loop",Integer.toString(statusCode));
-
                 if(statusCode == 200){
                     inputStream = new BufferedInputStream(urlConnection.getInputStream());
                     String response = convertInputStreamToString(inputStream);
                     parseResult(response);
-                    Log.d("Inside Status Code", "Connection OK");
+
                 }
 
 
@@ -112,7 +121,7 @@ public class Product_Info extends Activity {
         @Override
         protected void onPostExecute(Integer result) {
             /* Download complete. Lets update UI */
-
+            //Set Progress Bar visibility to gone
             progressBar.setVisibility(View.GONE);
 
             //Add to all the views
@@ -121,6 +130,7 @@ public class Product_Info extends Activity {
             productRatingView.setText(ratingString);
             productDesc.setText(finalDesc);
 
+            //Add bitmap to image view
             productTypeView.setText(typeString);
             try {
                 URL urlV = new URL(imageUrl);
@@ -140,12 +150,14 @@ public class Product_Info extends Activity {
 
     }
 
+
+    //Convert Stream to String type
     private String convertInputStreamToString(InputStream inputStream){
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
 
         String line = "";
         String result = "";
-        Log.d("Inside Convert Stream","Stream to String");
+
         try {
             while((line = bufferedReader.readLine()) != null){
                 result += line;
@@ -164,6 +176,7 @@ public class Product_Info extends Activity {
         return result;
     }
 
+    //Parse JSON
     private void parseResult(String result) {
 
         try{
@@ -174,7 +187,7 @@ public class Product_Info extends Activity {
             PrdnameString = response.optString("productName");
             imageUrl = response.optString("defaultImageUrl");
             JSONArray posts = response.optJSONArray("childAsins");
-            Log.d("ChildAsins length: ", Integer.toString(posts.length()));
+
 
             //Get content from <li> tags
             List<String> tagValues = new ArrayList<String>();

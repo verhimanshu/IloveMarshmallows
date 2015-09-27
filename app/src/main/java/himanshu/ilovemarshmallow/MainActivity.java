@@ -1,3 +1,9 @@
+/*
+Following class gets brand name as user input
+Asks user to submit the brand value
+
+*/
+
 package himanshu.ilovemarshmallow;
 
 import android.app.Activity;
@@ -33,18 +39,18 @@ public class MainActivity extends Activity {
         });
 
 
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             handleSendText(intent);
-        }
+        }*/
 
 
     }
 
-
+    //Gets intent if something has been shared
     void handleSendText(Intent intent) {
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (sharedText != null) {
